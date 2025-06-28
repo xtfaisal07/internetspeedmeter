@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Speed Meter</title>
+    <meta name="description" content="Professional real-time internet speed testing with advanced analytics">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="data:application/json;charset=utf-8,{&quot;name&quot;:&quot;Speed Meter&quot;,&quot;short_name&quot;:&quot;SpeedTest&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;theme_color&quot;:&quot;#21808d&quot;}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header__content">
+                    <h1 class="header__title">
+                        <span class="header__icon">⚡</span>
+                        Advanced Speed Meter
+                    </h1>
+                    <div class="header__controls">
+                        <button class="btn btn--secondary btn--sm theme-toggle" aria-label="Toggle theme">
+                            <span class="theme-icon">🌙</span>
+                        </button>
+                        <button class="btn btn--secondary btn--sm settings-btn" aria-label="Settings">
+                            <span>⚙️</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Test Status -->
+                <div class="test-status">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Ready to test</span>
+                    </div>
+                </div>
+
+                <!-- Speed Gauges -->
+                <section class="gauges-section">
+                    <div class="gauges-grid">
+                        <!-- Download Gauge -->
+                        <div class="gauge-container">
+                            <div class="gauge-card">
+                                <h3 class="gauge-title">Download</h3>
+                                <div class="gauge-wrapper">
+                                    <svg class="gauge-svg" viewBox="0 0 200 200">
+                                        <circle class="gauge-bg" cx="100" cy="100" r="80" fill="none" stroke="var(--color-border)" stroke-width="8"/>
+                                        <circle class="gauge-fill gauge-download" cx="100" cy="100" r="80" fill="none" stroke="var(--color-primary)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+                                    </svg>
+                                    <div class="gauge-value">
+                                        <span class="speed-value" id="download-speed">0</span>
+                                        <span class="speed-unit">Mbps</span>
+                                    </div>
+                                </div>
+                                <div class="gauge-quality">
+                                    <span class="quality-label" id="download-quality">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Gauge -->
+                        <div class="gauge-container">
+                            <div class="gauge-card">
+                                <h3 class="gauge-title">Upload</h3>
+                                <div class="gauge-wrapper">
+                                    <svg class="gauge-svg" viewBox="0 0 200 200">
+                                        <circle class="gauge-bg" cx="100" cy="100" r="80" fill="none" stroke="var(--color-border)" stroke-width="8"/>
+                                        <circle class="gauge-fill gauge-upload" cx="100" cy="100" r="80" fill="none" stroke="var(--color-primary)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+                                    </svg>
+                                    <div class="gauge-value">
+                                        <span class="speed-value" id="upload-speed">0</span>
+                                        <span class="speed-unit">Mbps</span>
+                                    </div>
+                                </div>
+                                <div class="gauge-quality">
+                                    <span class="quality-label" id="upload-quality">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ping Display -->
+                        <div class="gauge-container">
+                            <div class="gauge-card">
+                                <h3 class="gauge-title">Latency</h3>
+                                <div class="ping-display">
+                                    <div class="ping-value">
+                                        <span class="speed-value" id="ping-value">-</span>
+                                        <span class="speed-unit">ms</span>
+                                    </div>
+                                    <div class="ping-quality">
+                                        <span class="quality-label" id="ping-quality">Testing...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Test Controls -->
+                <section class="controls-section">
+                    <div class="controls-container">
+                        <button class="btn btn--primary btn--lg test-button" id="start-test">
+                            <span class="btn-text">Start Speed Test</span>
+                            <span class="btn-loader hidden">Testing...</span>
+                        </button>
+                        <div class="test-progress hidden">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span id="progress-stage">Initializing...</span>
+                                <span id="progress-percent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Real-time Stats -->
+                <section class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-content">
+                                <div class="stat-label">Test Progress</div>
+                                <div class="stat-value" id="test-progress">0%</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔗</div>
+                            <div class="stat-content">
+                                <div class="stat-label">Connections</div>
+                                <div class="stat-value" id="connections-count">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📡</div>
+                            <div class="stat-content">
+                                <div class="stat-label">Data Transferred</div>
+                                <div class="stat-value" id="data-transferred">0 MB</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏱️</div>
+                            <div class="stat-content">
+                                <div class="stat-label">Test Duration</div>
+                                <div class="stat-value" id="test-duration">0s</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Chart Section -->
+                <section class="chart-section">
+                    <div class="chart-container">
+                        <h3 class="chart-title">Real-time Speed Chart</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="speed-chart" width="800" height="300"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Results Panel -->
+                <section class="results-section">
+                    <div class="results-container">
+                        <h3 class="results-title">Latest Test Results</h3>
+                        <div class="results-grid" id="results-grid">
+                            <div class="result-placeholder">
+                                <span>Run a test to see detailed results</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- History Section -->
+                <section class="history-section">
+                    <div class="history-container">
+                        <div class="history-header">
+                            <h3 class="history-title">Test History</h3>
+                            <div class="history-controls">
+                                <button class="btn btn--secondary btn--sm" id="clear-history">Clear History</button>
+                                <button class="btn btn--secondary btn--sm" id="export-history">Export</button>
+                            </div>
+                        </div>
+                        <div class="history-list" id="history-list">
+                            <div class="history-placeholder">
+                                <span>No test history yet</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal-overlay hidden" id="settings-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Settings</h3>
+                    <button class="modal-close" aria-label="Close settings">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="test-duration">Test Duration (seconds)</label>
+                        <select class="form-control" id="test-duration">
+                            <option value="15">15 seconds</option>
+                            <option value="30" selected>30 seconds</option>
+                            <option value="60">60 seconds</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="parallel-connections">Parallel Connections</label>
+                        <select class="form-control" id="parallel-connections">
+                            <option value="2">2 connections</option>
+                            <option value="4" selected>4 connections</option>
+                            <option value="8">8 connections</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="auto-test"> Auto-start test on load
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--secondary" id="settings-cancel">Cancel</button>
+                    <button class="btn btn--primary" id="settings-save">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
